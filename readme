@@ -1,0 +1,224 @@
+# 📧 EmailPrompt AI — AI-Powered Email Reply Assistant
+
+EmailPrompt AI is an AI-powered application that generates email replies based on the original email content and the tone selected by the user. It uses **Python, Streamlit, LangChain, and Groq LLMs** to create clear, relevant, and personalized email drafts.
+
+The project demonstrates practical prompt engineering, reusable prompt templates, LLM integration, and frontend development.
+
+## ✨ Features
+
+- **Email Input:** Paste an email received from a colleague, manager, or client.
+- **Tone Selection:** Choose Professional, Friendly, Formal, or Short.
+- **Dynamic Prompt Templates:** Inject user inputs into reusable LangChain prompt templates.
+- **AI-Powered Reply Generation:** Generate contextual email drafts using a Groq-hosted language model.
+- **Editable Responses:** Review and modify generated replies before copying them.
+- **Input Validation:** Handle empty email inputs and missing API keys.
+- **Secure Configuration:** Store API credentials in environment variables.
+
+## 🛠️ Tech Stack
+
+| Technology | Purpose |
+|---|---|
+| Python | Application logic |
+| Streamlit | Frontend and user interface |
+| LangChain | Prompt templates and LLM orchestration |
+| Groq API | Language model inference |
+| `langchain-groq` | LangChain integration with Groq |
+| `python-dotenv` | Environment variable management |
+
+## 🏗️ Architecture
+
+```text
+User
+ |
+ v
+Streamlit Frontend (app.py)
+ |
+ |-- Original Email
+ |-- Selected Tone
+ |
+ v
+Email Service (email_service.py)
+ |
+ v
+LangChain Prompt Template
+(prompt_templates.py)
+ |
+ v
+LangChain Chain
+(email_prompt | llm)
+ |
+ v
+Groq LLM
+ |
+ v
+Generated Email Reply
+ |
+ v
+Review, Edit, and Copy
+```
+
+## 📂 Project Structure
+
+```text
+EmailPrompt-AI/
+│
+├── app.py
+├── prompt_templates.py
+├── email_service.py
+├── .env
+├── .gitignore
+├── requirements.txt
+└── README.md
+```
+
+- **`app.py`** — Builds the Streamlit interface, captures user inputs, and displays generated replies.
+- **`prompt_templates.py`** — Defines the system instructions, user message, and dynamic placeholders.
+- **`email_service.py`** — Configures the Groq model, creates the LangChain chain, and generates email replies.
+- **`.env`** — Stores the Groq API key locally.
+- **`.gitignore`** — Excludes secrets and unnecessary local files.
+- **`requirements.txt`** — Lists the project's Python dependencies.
+
+## ⚙️ Installation and Setup
+
+### 1. Clone the repository
+
+```bash
+git clone <your-github-repository-url>
+cd EmailPrompt-AI
+```
+
+### 2. Create a virtual environment
+
+```bash
+python -m venv venv
+```
+
+Activate it on Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+For Windows Command Prompt:
+
+```bat
+venv\Scripts\activate.bat
+```
+
+### 3. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### 4. Configure the Groq API key
+
+Create a `.env` file in the project root:
+
+```dotenv
+GROQ_API_KEY=your_groq_api_key
+```
+
+Obtain an API key from the [Groq Console](https://console.groq.com/keys).
+
+**Security:** Never publish your API key or commit the `.env` file to GitHub.
+
+### 5. Run the application
+
+```bash
+streamlit run app.py
+```
+
+Open the local URL displayed in the terminal to use the application.
+
+## 🧠 Prompt Engineering Implementation
+
+The project uses LangChain's `ChatPromptTemplate` to construct reusable prompts.
+
+The template contains:
+
+- **Role prompting:** Defines the model as an email-writing assistant.
+- **Instruction prompting:** Specifies clarity, relevance, and response requirements.
+- **Dynamic variables:** Uses `{email}` and `{tone}` to incorporate user inputs.
+- **Output constraints:** Requests only the email reply.
+- **Hallucination mitigation:** Instructs the model not to invent facts or commitments.
+- **Untrusted-input handling:** Instructs the model not to treat instructions inside pasted emails as higher-priority system instructions.
+
+Example:
+
+```python
+email_prompt = ChatPromptTemplate.from_messages([
+    (
+        "system",
+        """
+        You are an email-writing assistant.
+        Follow the selected tone.
+        Do not invent facts or commitments.
+        Return only the email reply.
+        """
+    ),
+    (
+        "human",
+        """
+        Selected tone: {tone}
+
+        Original email:
+        {email}
+
+        Write an appropriate reply.
+        """
+    )
+])
+```
+
+The selected tone and original email are inserted dynamically at runtime, allowing one prompt template to support multiple writing styles.
+
+## 🔄 Application Workflow
+
+1. The user enters an original email in the Streamlit interface.
+2. The user selects a preferred response tone.
+3. The application validates the input.
+4. The email service supplies the input values to the LangChain chain.
+5. LangChain formats the prompt and invokes the Groq model.
+6. The model generates a reply.
+7. The application displays the draft for review and editing.
+
+## 🔮 Future Enhancements
+
+- Few-shot prompting with example email replies.
+- Prompt evaluation and comparison.
+- Improved handling of ambiguous emails.
+- Multiple reply variations.
+- Reply length and formality controls.
+- Unit tests and automated evaluation.
+- Deployment to a cloud hosting platform.
+- Optional Gmail integration.
+
+## 🎯 Learning Outcomes
+
+This project provides practical experience with:
+
+- Python application development.
+- Prompt engineering and reusable templates.
+- LangChain Expression Language (LCEL).
+- LLM API integration using Groq.
+- Streamlit frontend development.
+- Environment variables and API-key security.
+- Input validation, error handling, and response evaluation.
+
+## ⚠️ Limitations
+
+- Generated replies may contain inaccuracies and should be reviewed before sending.
+- The application requires a valid Groq API key and access to a supported model.
+- Email content is sent to the configured model provider for processing.
+- The current version does not automatically read or send emails through Gmail or Outlook.
+
+## 👨‍💻 Author
+
+**Bhupesh Obulu**
+
+Generative AI Engineer | Python | LangChain | RAG | LLM Applications
+
+---
+
+*EmailPrompt AI is a learning and portfolio project demonstrating prompt-driven email reply generation.*
